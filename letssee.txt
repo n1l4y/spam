@@ -1,0 +1,15 @@
+def spot(symbol, quantity, price):
+    global ACCESS_KEY, API_SECRET
+
+    params = f"symbol={symbol}&side=BUY&type=LIMIT&quantity={quantity}&price={price}&recvWindow=30000&timestamp={int(time.time() * 1000)}"
+    base_url = 'https://api.mexc.com/api/v3/order'
+
+    headers = {
+        'Content-Type': 'application/json',
+        'X-MEXC-APIKEY': 'mx0vglQQQKgOL6ZrK7'
+    }
+    signature = hmac.new(b'dbd2999a754b408b9496268a0808912d', params.encode('utf-8'), hashlib.sha256).hexdigest()
+    response = requests.post(f'{base_url}?{params}&signature={signature}', headers=headers)
+    response.raise_for_status()
+    res = response.json()
+    return res
